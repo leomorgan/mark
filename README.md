@@ -7,7 +7,7 @@ It's one React component with no props to set. The letters are outlines of Mona 
 ## Install
 
 ```sh
-pnpm add github:leomorgan/mark#v1.0.0
+pnpm add github:leomorgan/mark#v1.1.0
 ```
 
 ## Use
@@ -19,6 +19,23 @@ import { LeoMark } from "@leomorgan/mark";
 ```
 
 Put it where a screen ends: below the main view, at the foot of a sheet or a sign-in page. `className` and `style` are passed through for placing it. The link and the look are fixed here, so every app stays the same.
+
+The link is at least 44px tall, so it's easy to tap, and a negative margin takes the extra height back, so it takes no more room than the letters.
+
+## On leomorgan.ai only
+
+leomorgan.ai uses the mark as its header logo, linked home with its own `next/link`, because a link to `https://leomorgan.ai` would take staging visitors to production. For that one place there's the bare glyph, with no link:
+
+```tsx
+import Link from "next/link";
+import { LeoMarkGlyph } from "@leomorgan/mark";
+
+<Link href="/" aria-label="leomorgan.ai">
+  <LeoMarkGlyph />
+</Link>
+```
+
+It takes `className` and an optional `title`, nothing else. With no title it's hidden from screen readers, so the link around it gives the name. Every other app uses `<LeoMark />`.
 
 ## Change it
 
