@@ -1,0 +1,28 @@
+{
+  "name": "@leomorgan/mark",
+  "version": "1.0.0",
+  "description": "The maker's mark for Leo Morgan's apps: leomorgan.ai, with a teal full stop.",
+  "license": "MIT",
+  "author": "Leo Morgan (https://leomorgan.ai)",
+  "repository": "github:leomorgan/mark",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    }
+  },
+  "files": ["index.js", "index.d.ts"],
+  "scripts": {
+    "test": "node --test"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "devDependencies": {
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
+  },
+  "packageManager": "pnpm@11.10.0"
+}
