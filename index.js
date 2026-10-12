@@ -12,6 +12,10 @@ const LETTERS =
 export const TEAL = "#0fa89b";
 export const HREF = "https://leomorgan.ai";
 
+// The link reaches this far above and below the mark, for a tap target at least 44px tall.
+// A negative margin takes it back, so the mark takes no more room than its letters.
+const REACH = Math.ceil((44 - HEIGHT) / 2);
+
 /**
  * The maker's mark for Leo Morgan's apps: "leomorgan●ai", linking to leomorgan.ai.
  * The letters take the surrounding text colour. Place it; don't restyle it.
@@ -28,17 +32,33 @@ export function LeoMark(props) {
         alignItems: "center",
         color: "inherit",
         textDecoration: "none",
-        // A 40px tall tap target that takes no more room than the mark.
-        padding: "14px 0",
-        margin: "-14px 0",
+        padding: `${REACH}px 0`,
+        margin: `-${REACH}px 0`,
         ...props.style,
       },
     },
-    h(
-      "svg",
-      { width: WIDTH, height: HEIGHT, viewBox: VIEW_BOX, "aria-hidden": "true", focusable: "false", style: { display: "block", overflow: "visible" } },
-      h("path", { d: LETTERS, fill: "currentColor" }),
-      h("circle", { ...DOT, fill: TEAL }),
-    ),
+    h(LeoMarkGlyph),
+  );
+}
+
+/**
+ * The same mark with no link, for leomorgan.ai's own header, which links it home itself.
+ * Other apps use LeoMark. Without a title it's hidden from screen readers, so the link around it names it.
+ */
+export function LeoMarkGlyph({ className, title } = {}) {
+  return h(
+    "svg",
+    {
+      width: WIDTH,
+      height: HEIGHT,
+      viewBox: VIEW_BOX,
+      ...(title ? { role: "img" } : { "aria-hidden": "true" }),
+      focusable: "false",
+      className,
+      style: { display: "block", overflow: "visible" },
+    },
+    title ? h("title", null, title) : null,
+    h("path", { d: LETTERS, fill: "currentColor" }),
+    h("circle", { ...DOT, fill: TEAL }),
   );
 }
