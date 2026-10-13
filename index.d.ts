@@ -1,6 +1,8 @@
 import type { ComponentPropsWithoutRef, JSX } from "react";
 
 export declare const TEAL: "#0fa89b";
+/** Set this CSS custom property in an app to colour the full stop with one of its own colours. Unset, it's teal. */
+export declare const DOT_VAR: "--leomark-dot";
 export declare const HREF: "https://leomorgan.ai";
 
 /** The maker's mark for Leo Morgan's apps: "leomorgan●ai", linking to leomorgan.ai. */
