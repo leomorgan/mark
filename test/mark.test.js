@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { LeoMark, LeoMarkGlyph, HREF, TEAL } from "../index.js";
+import { LeoMark, LeoMarkGlyph, HREF, TEAL, DOT_VAR } from "../index.js";
 
 const html = (props) => renderToStaticMarkup(h(LeoMark, props));
 const glyph = (props) => renderToStaticMarkup(h(LeoMarkGlyph, props));
@@ -11,6 +11,9 @@ const glyph = (props) => renderToStaticMarkup(h(LeoMarkGlyph, props));
 // <LeoMark /> as v1.0.0 rendered it.
 const V1_0_0 = readFileSync(new URL("./v1.0.0.html", import.meta.url), "utf8").trim();
 const HIT_AREA = /padding:(\d+)px 0;margin:-(\d+)px 0/;
+// v1.2.0: the full stop reads its colour from --leomark-dot, falling back to teal.
+const DOT_V1 = `fill="${TEAL}"`;
+const DOT_NOW = `style="fill:var(${DOT_VAR}, ${TEAL})"`;
 
 test("links to leomorgan.ai with a readable name", () => {
   const out = html();
@@ -18,10 +21,16 @@ test("links to leomorgan.ai with a readable name", () => {
   assert.match(out, /<svg[^>]*aria-hidden="true"/);
 });
 
-test("letters take the text colour and the full stop is teal", () => {
+test("letters take the text colour and the full stop is teal unless the app sets --leomark-dot", () => {
   const out = html();
   assert.match(out, /<path d="M[^"]+" fill="currentColor"/);
-  assert.match(out, new RegExp(`<circle[^>]*fill="${TEAL}"`));
+  assert.ok(out.includes(`<circle cx="5310" cy="579" r="150" ${DOT_NOW}>`), out.match(/<circle[^>]*>/)[0]);
+});
+
+test("--leomark-dot colours the full stop and nothing else", () => {
+  const out = html();
+  assert.equal(out.split(DOT_VAR).length - 1, 1);
+  assert.doesNotMatch(out.match(/<path[^>]*>/)[0], /leomark-dot/);
 });
 
 test("apps can place it but can't change where it goes", () => {
@@ -42,10 +51,10 @@ test("the link is at least 44px square but takes no more room than the mark", ()
   assert.equal(margin, padding, "the negative margin takes back all the padding");
 });
 
-test("<LeoMark /> renders as v1.0.0 did, apart from the hit area", () => {
+test("<LeoMark /> renders as v1.0.0 did, apart from the hit area and the dot's colour variable", () => {
   const out = html();
   assert.notEqual(out, V1_0_0, "the hit area grew");
-  assert.equal(out.replace(HIT_AREA, ""), V1_0_0.replace(HIT_AREA, ""));
+  assert.equal(out.replace(HIT_AREA, "").replace(DOT_NOW, DOT_V1), V1_0_0.replace(HIT_AREA, ""));
 });
 
 test("the glyph is the same SVG with no link", () => {
